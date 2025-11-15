@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayCash | پوائنٹس اور کیش کمانے کا آسان طریقہ</title>
+    
+    <!-- CSS File Link -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Google Fonts for Urdu & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Firebase SDK Links (MUST BE HERE) -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+
+</head>
+<body>
+
+    <!-- Loading Animation (Hidden by Default) -->
+    <div id="animation-container" class="animation-container" style="display: none;">
+        <div class="spinner"></div>
+        <p class="animation-text">ڈیٹا لوڈ ہو رہا ہے...</p>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-hand-holding-usd"></i> PayCash App</h1>
+        </header>
+
+        <!-- --- LOGIN/SIGNUP SECTION --- -->
+        <section id="login-container" class="card login-container" style="display: none;">
+            <h2>شروع کرنے کے لیے لاگ ان کریں</h2>
+            <form id="login-form">
+                <input type="text" id="username-input" placeholder="اپنا یوزر نیم (مثلاً: User123)" required>
+                <button type="submit" class="btn btn-primary">لاگ ان / نیا اکاؤنٹ بنائیں</button>
+            </form>
+            <p class="note">اگر آپ کا اکاؤنٹ موجود نہیں ہے تو نیا اکاؤنٹ بن جائے گا۔</p>
+        </section>
+
+        <!-- --- DASHBOARD SECTION --- -->
+        <section id="dashboard-container" class="dashboard-container" style="display: none;">
+            
+            <div class="user-info">
+                <p id="welcome-message" class="welcome-message"></p>
+                <h3 id="user-points" class="points-display">⭐ 0 Points</h3>
+                <p id="user-level" class="level-badge">لیول 1: Starter</p>
+            </div>
+
+            <div class="dashboard-grid">
+
+                <!-- 1. ACTIVATION SECTION (Hidden after activation) -->
+                <div id="activation-section" class="card activation-card" style="display: none;">
+                    <h3><i class="fas fa-unlock"></i> بٹن ایکٹیویشن</h3>
+                    <p>روزانہ پوائنٹس کلیم کرنے کے لیے اکاؤنٹ ایکٹیو کروائیں۔</p>
+                    <p class="easypaisa-info">صرف <strong id="activation-fee">120</strong> روپے بھیجیں:</p>
+                    <p class="payment-details">Easypaisa/JazzCash نمبر: <strong>(نمبر یہاں آٹو آئے گا)</strong></p>
+                    <p class="activation-steps"> ادائیگی کے بعد سکرین شاٹ WhatsApp پر بھیجیں۔</p>
+                    <button id="activate-manual-btn" class="btn btn-warning">WhatsApp پر سکرین شاٹ بھیجیں</button>
+                </div>
+
+
+                <!-- 2. DAILY POINTS SECTION (Visible after activation) -->
+                <div id="daily-section" class="card claim-card" style="display: none;">
+                    <h3><i class="fas fa-clock"></i> روزانہ پوائنٹس</h3>
+                    <p id="timer-message" class="timer-message">آپ آج کے 200 پوائنٹس حاصل کر سکتے ہیں!</p>
+                    <button id="claim-button" class="btn btn-success" disabled>آج کے پوائنٹس کلیم کریں</button>
+                    <p class="claim-note"><i class="fas fa-info-circle"></i> آپ 24 گھنٹے بعد دوبارہ کلیم کر سکتے ہیں۔</p>
+                </div>
+
+                
+                <!-- 3. EXTRA CLICK SECTION (Extra Points) -->
+                <div id="extra-click-section" class="card extra-click-card" style="display: none;">
+                    <h3><i class="fas fa-plus-circle"></i> اضافی پوائنٹس</h3>
+                    <p>صرف 20 روپے دے کر فوری *200* اضافی پوائنٹس حاصل کریں۔</p>
+                    <button id="extra-claim-button" class="btn btn-info">اضافی پوائنٹس کلیم کریں</button>
+                </div>
+
+                <!-- 4. MYSTERY BOX SECTION (NEW) -->
+                <div id="mystery-box-section" class="card mystery-box-card" style="display: none;">
+                    <h3><i class="fas fa-box-open"></i> Mystery Box</h3>
+                    <p id="mystery-box-message" class="box-message"></p>
+                    <button id="mystery-box-button" class="btn btn-danger inactive-box" disabled>₹10 میں باکس ایکٹیو کروائیں</button>
+                </div>
+
+                <!-- 5. REWARDS SECTION -->
+                <div id="reward-section" class="card reward-card" style="display: none;">
+                    <h3><i class="fas fa-gift"></i> انعام اور ریوارڈز</h3>
+                    <p id="reward-message" class="reward-message"></p>
+                    <p id="mega-
