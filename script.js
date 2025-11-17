@@ -5,8 +5,8 @@ const firebaseConfig = {
     authDomain: "paycash-92256.firebaseapp.com", 
     projectId: "paycash-92256",        
     databaseURL: "https://paycash-92256-default-rtdb.firebaseio.com",
+    };
     // Other IDs are optional for this basic setup
-};
 // -----------------------------------------------------------
 
 // Initialize Firebase (MUST BE AT THE TOP)
