@@ -306,31 +306,39 @@ function checkMysteryBoxStatus(userData) {
     }
 }
 
-document.getElementById('mystery-box-button').addEventListener('click', async function() {
+document.getElementById('mystery-box-button').addEventListener('click', async () => {
+    // 1. Get current username from localStorage
     const username = localStorage.getItem('currentUser');
+    
+    if (!username) {
+        console.error("یوزر نیم نہیں ملا۔ براہ کرم دوبارہ لاگ ان کریں۔"); // ایرر لاگ میں
+        return;
+    }
+
+    // 2. Fetch user data
     let userData = await getUserData(username);
 
-    if (userData.mysteryBoxActive) {
+    if (userData && userData.mysteryBoxActive) {
         // Generate random points between 50 and 500
-        const randomPoints = Math.floor(Math.random() * 451) + 50; 
+        const randomPoints = Math.floor(Math.random() * 451) + 50;
 
         userData.points += randomPoints;
         userData.mysteryBoxActive = false; // Auto reset after one click
-        
-        await saveUserData(username, userData);
-        
-        alert(🎉 مبارک ہو! آپ نے Mysterious Box کھولا اور ${randomPoints} پوائنٹس حاصل کیے۔ یہ باکس اب بند ہو گیا ہے!);
-        
-        showAnimation(); 
-        getUserData(username).then(renderDashboard);
 
+        await saveUserData(username, userData);
+
+        // ALERT REMOVED: Replaced with console.log so code doesn't stop
+        console.log(`انعام ابو مبارک: آپ نے Mysterious Box کھولا اور ${randomPoints} پوائنٹس جیتے!`);
+
+        showAnimation();
+        // Updated logic: Check box status and re-render dashboard
+        checkMysteryBoxStatus(userData); 
+        renderDashboard(userData);
     } else {
-        // If not active, show instruction to pay
-        alert(⚠️ فوری Mystery Box پوائنٹس کے لیے:\n\n1. ${MYSTERY_BOX_FEE} روپے ${PAYMENT_NUMBER} پر بھیجیں۔\n2. اس ادائیگی کا نیا سکرین شاٹ ہمیں WhatsApp (${CONTACT_NUMBER}) پر بھیجیں۔\n\nایڈمن تصدیق کے بعد آپ کا باکس ایکٹیو کر دے گا۔);
+        // Not active - show console message instead of alert
+        console.log(`Mystery Box ابھی ایکٹو نہیں ہے۔ اسے کھولنے کے لیے ${MYSTERY_BOX_FEE} روپے فیس ادا کریں۔`);
     }
 });
-
-
 // --- Logout ---
 document.getElementById('logout-button').addEventListener('click', function() {
     localStorage.removeItem('currentUser'); // Only remove the local user session
