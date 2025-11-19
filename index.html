@@ -1,294 +1,38 @@
-<!DOCTYPE html>
-<html lang="ur" dir="rtl">
+ <!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>آن لائن کمائی - PayCash App</title>
-    <!-- Tailwind CSS for Basic Styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Almarai for Urdu -->
-    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-        /* Custom CSS to ensure Urdu Font and direction is correct */
-        body {
-            font-family: 'Almarai', sans-serif;
-            text-align: right;
-            direction: rtl; /* Right-to-Left for Urdu */
-            background-color: #f7f9fc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 420px;
-            width: 100%;
-            background-color: white;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        .card {
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e5e7eb;
-        }
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-        .btn:hover {
-            transform: translateY(-1px);
-        }
-        .btn-primary {
-            background-color: #3b82f6; /* Blue */
-            color: white;
-        }
-        .btn-primary:active {
-            background-color: #2563eb;
-        }
-        .btn-secondary {
-            background-color: #f3f4f6;
-            color: #374151;
-        }
-        .btn-secondary:active {
-            background-color: #e5e7eb;
-        }
-        .input-field {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-        .error-message, .loading-message {
-            text-align: center;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 6px;
-            font-weight: 600;
-            display: none;
-        }
-        .error-message {
-            color: #dc2626; /* Red */
-            background-color: #fecaca; /* Light Red */
-        }
-        .loading-message {
-            color: #1d4ed8; /* Dark Blue */
-            background-color: #bfdbfe; /* Light Blue */
-        }
-        .progress-bar {
-            height: 10px;
-            background-color: #e5e7eb;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-top: 5px;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: #10b981; /* Green */
-            transition: width 0.5s ease;
-        }
-        .active-box {
-            background-color: #10b981; /* Green */
-            color: white;
-            box-shadow: 0 0 10px #10b981;
-        }
-        .active-box:hover {
-            background-color: #059669;
-        }
-        .inactive-box {
-            background-color: #ef4444; /* Red */
-            color: white;
-            opacity: 0.7;
-        }
-        .dashboard-stats p {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px dashed #e5e7eb;
-        }
-        .dashboard-stats p:last-child {
-            border-bottom: none;
-        }
-        .dashboard-stats span:first-child {
-            font-weight: 500;
-            color: #4b5563;
-        }
-        .dashboard-stats span:last-child {
-            font-weight: 700;
-            color: #1f2937;
-        }
-        /* Mobile Specific Adjustments */
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px;
-                border-radius: 0;
-                min-height: 100vh;
-            }
-            body {
-                padding: 0;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PayCash — Home</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <header>
+    <h1>PayCash</h1>
+    <nav>
+      <a href="signup.html">Sign Up</a> |
+      <a href="login.html">Login</a> |
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+  </header>
 
-    <!-- 1. LOADING AND ERROR MESSAGES -->
-    <div id="loading-message" class="loading-message">
-        <i class="fas fa-spinner fa-spin"></i> لوڈنگ ہو رہی ہے۔ براہ کرم انتظار کریں۔
-    </div>
-    <div id="error-message" class="error-message">
-        <i class="fas fa-exclamation-triangle"></i> کوئی ایرر آ گیا ہے۔
-    </div>
+  <main>
+    <section class="hero">
+      <h2>Welcome to PayCash</h2>
+      <p>Earn points, refer friends, withdraw, and more!</p>
+      <a class="btn" href="signup.html">Get Started</a>
+    </section>
+  </main>
 
-    <!-- 2. LOGIN/REGISTER SECTION -->
-    <div id="login-container" class="container" style="display: none;">
-        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">پے کیش میں خوش آمدید</h2>
-        
-        <form id="login-form">
-            <input type="text" id="username-input" class="input-field" placeholder="یوزر نیم (5 حروف سے زیادہ)" required minlength="5" maxlength="15">
-            <button type="submit" id="login-button" class="btn btn-primary mb-3">لاگ اِن / رجسٹر کریں</button>
-        </form>
+  <footer>
+    <p>&copy; 2025 PayCash</p>
+  </footer>
 
-        <p class="text-sm text-center text-gray-500 mt-4">
-            نوٹ: پہلی دفعہ سائن اِن کرنے پر آپ کا اکاؤنٹ خود بخود بن جائے گا۔
-        </p>
-    </div>
+  <!-- Firebase SDKs v8 -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-    <!-- 3. DASHBOARD SECTION -->
-    <div id="dashboard-section" class="container" style="display: none;">
-        
-        <!-- Header & Logout -->
-        <div class="flex justify-between items-center mb-6 border-b pb-3">
-            <h1 class="text-xl font-bold text-gray-800">
-                <i class="fas fa-wallet text-green-500"></i> ڈیش بورڈ
-            </h1>
-            <button id="logout-button" class="btn btn-secondary py-1 px-3 text-sm">
-                <i class="fas fa-sign-out-alt"></i> لاگ آؤٹ
-            </button>
-        </div>
-
-        <!-- User Info Card -->
-        <div class="card">
-            <h3 class="text-lg font-semibold mb-3 text-gray-700">آپ کا اکاؤنٹ</h3>
-            <div class="dashboard-stats">
-                <p>
-                    <span><i class="fas fa-user"></i> یوزر نیم:</span>
-                    <span id="display-username">...</span>
-                </p>
-                <p>
-                    <span><i class="fas fa-coins text-yellow-500"></i> ٹوٹل پوائنٹس:</span>
-                    <span id="display-points" class="text-yellow-600">0</span>
-                </p>
-                <p>
-                    <span><i class="fas fa-level-up-alt text-blue-500"></i> موجودہ لیول:</span>
-                    <span id="display-level" class="text-blue-600">1</span>
-                </p>
-            </div>
-            
-            <!-- Progress Bar to Next Level -->
-            <div class="mt-4">
-                <p class="text-sm text-gray-500 mb-1">اگلے لیول کی جانب پیش رفت:</p>
-                <div class="progress-bar">
-                    <div id="level-progress" class="progress-fill" style="width: 0%;"></div>
-                </div>
-                <p id="level-progress-text" class="text-xs text-gray-500 mt-1 text-center"></p>
-            </div>
-        </div>
-
-        <!-- 4. DAILY BONUS CARD -->
-        <div class="card">
-            <h3 class="text-lg font-semibold mb-3 text-gray-700">
-                <i class="fas fa-calendar-day text-red-500"></i> روزانہ انعام
-            </h3>
-            <p id="daily-status" class="text-sm text-gray-600 mb-3 text-center">
-                ...
-            </p>
-            <button id="daily-claim-button" class="btn btn-primary" disabled>
-                <i class="fas fa-gift"></i> آج کا بونس کلیم کریں
-            </button>
-        </div>
-
-        <!-- 5. EARNING SECTION -->
-        <div class="card">
-            <h3 class="text-lg font-semibold mb-3 text-gray-700">
-                <i class="fas fa-mouse-pointer text-orange-500"></i> کمائی کے طریقے
-            </h3>
-            
-            <button id="click-button" class="btn btn-primary mb-3">
-                <i class="fas fa-hand-pointer"></i> کلک کریں اور پوائنٹس حاصل کریں
-            </button>
-            
-            <div class="flex gap-3">
-                <button id="extra-click-button" class="btn btn-secondary w-1/2">
-                    <i class="fas fa-plus-circle"></i> اضافی کلک (10 Rs)
-                </button>
-                <button id="mystery-box-button" class="btn btn-secondary w-1/2 inactive-box">
-                    <i class="fas fa-box-open"></i> Mysterious Box
-                </button>
-            </div>
-            <p id="box-message" class="text-xs text-gray-500 mt-2 text-center">
-                ...
-            </p>
-        </div>
-
-        <!-- 6. REWARDS SECTION -->
-        <div id="reward-section" class="card" style="display: none;">
-            <h3 class="text-lg font-semibold mb-3 text-gray-700">
-                <i class="fas fa-trophy text-green-500"></i> انعامات اور ریوارڈز
-            </h3>
-            <p id="reward-message" class="text-sm text-gray-600 mb-3 text-center">
-                آپ اگلے بڑے انعام کے قریب ہیں!
-            </p>
-            <div id="rewards-list">
-                <!-- Rewards will be dynamically inserted here -->
-            </div>
-        </div>
-
-        <!-- 7. CONTACT & REFERRAL -->
-        <div class="card">
-            <h3 class="text-lg font-semibold mb-3 text-gray-700">
-                <i class="fas fa-share-alt text-purple-500"></i> ریفرل اور رابطہ
-            </h3>
-            <p class="text-sm text-gray-600 mb-2">
-                اپنا ریفرل کوڈ شیئر کریں اور پوائنٹس حاصل کریں!
-            </p>
-            <button id="referral-button" class="btn btn-secondary mb-3">
-                <i class="fas fa-user-plus"></i> ریفرل کوڈ کاپی کریں
-            </button>
-            <a id="whatsapp-link" href="#" target="_blank" class="btn btn-primary text-sm bg-green-500 hover:bg-green-600">
-                <i class="fab fa-whatsapp"></i> ایڈمن سے رابطہ کریں (Payment)
-            </a>
-        </div>
-
-    </div>
-    
-    <!-- 8. FIREBASE SDK (MUST BE HERE) -->
-    <!-- یہ ضروری ہے کہ Firebase SDK کا کوڈ آپ کی script.js سے پہلے لوڈ ہو -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <!-- /FIREBASE SDK -->
-    
-    <!-- 9. YOUR JAVASCRIPT FILE (اس کے بعد) -->
-    <script src="script.js"></script> 
-
+  <script src="js/firebase-config.js"></script>
 </body>
 </html>
