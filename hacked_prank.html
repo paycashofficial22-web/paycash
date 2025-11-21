@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>☠️ CRITICAL SYSTEM FAILURE ☠️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+        body {
+            background-color: #000;
+            color: #00FF00;
+            font-family: 'Consolas', 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Glitch Effect */
+        body.glitch::before, body.glitch::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 1000;
+            animation: glitch-anim 0.8s infinite linear alternate-reverse;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            opacity: 0.1;
+        }
+        body.glitch::after {
+            left: 2px;
+            text-shadow: -2px 0 red;
+            background: rgba(0,255,0,0.1);
+        }
+        body.glitch::before {
+            left: -2px;
+            text-shadow: 2px 0 blue;
+            background: rgba(0,0,255,0.1);
+        }
+
+        @keyframes glitch-anim {
+            0% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+            25% { clip-path: polygon(0 15%, 100% 15%, 100% 85%, 0 85%); }
+            50% { clip-path: polygon(0 30%, 100% 30%, 100% 70%, 0 70%); }
+            75% { clip-path: polygon(0 50%, 100% 50%, 100% 50%, 0 50%); }
+            100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+        }
+
+        #main-message {
+            font-size: 10vw; 
+            color: #FF0000; 
+            font-weight: bold;
+            text-shadow: 0 0 20px #FF0000;
+            animation: flicker 0.1s infinite alternate; 
+            z-index: 2; 
+            margin-bottom: 20px;
+        }
+
+        #stream-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+            pointer-events: none; 
+            z-index: 1; 
+        }
+
+        .data-stream {
+            font-size: 2vw;
+            color: #008000; 
+            white-space: pre; 
+            animation: stream-scroll 10s linear infinite;
+        }
+
+        @keyframes stream-scroll {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        @keyframes flicker {
+            from { opacity: 1; }
+            to { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div id="stream-container"></div>
+    <div id="main-message">
+        <p>☠️ DEVICE CRITICAL FAILURE ☠️</p>
+        <p style="font-size: 5vw; color: #FFA500;">ACCESS SHUTDOWN</p>
+        <p style="font-size: 3vw; color: #FF0000;">SYSTEM FORCED TO REBOOT IN <span id="timer">40</span> SECONDS...</p>
+    </div>
+
+    <script>
+        const streamContainer = document.getElementById('stream-container');
+        const mainMessage = document.getElementById('main-message');
+        const body = document.body;
+        const timerDisplay = document.getElementById('timer');
+        let timeLeft = 40; // 40 seconds time
+
+        function generateRandomStream() {
+            let stream = '';
+            for (let i = 0; i < 50; i++) {
+                stream += String.fromCharCode(33 + Math.floor(Math.random() * 94)) + '\n';
+            }
+            return stream;
+        }
+
+        function createStreamColumn() {
+            const streamDiv = document.createElement('div');
+            streamDiv.className = 'data-stream';
+            streamDiv.style.left = `${Math.random() * 100}vw`; 
+            streamDiv.textContent = generateRandomStream();
+            streamContainer.appendChild(streamDiv);
+
+            setTimeout(() => {
+                streamDiv.remove(); 
+                createStreamColumn(); 
+            }, 5000); 
+        }
+
+        // Timer function
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timerDisplay.textContent = timeLeft;
+            }
+        }
+
+        // Start creating streams and effects
+        for (let i = 0; i < 10; i++) {
+            setTimeout(createStreamColumn, i * 500); 
+        }
+
+        // Start timer update
+        setInterval(updateTimer, 1000);
+
+        // Add glitch effect
+        body.classList.add('glitch');
+
+        // Vibration effect (if mobile supports)
+        if (navigator.vibrate) {
+            navigator.vibrate([200, 100, 200, 100, 500, 100, 200, 100, 200, 100, 1000]); 
+        }
+        
+        // Back Button Trick: User ko page se nikalne se rokne ki koshish
+        history.pushState(null, null, location.href);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, location.href);
+        });
+
+        // Prank ko 40 seconds baad khatam karein
+        setTimeout(() => {
+            // Glitch aur vibration band karein
+            body.classList.remove('glitch');
+            if (navigator.vibrate) {
+                navigator.vibrate(0); 
+            }
+            body.style.animation = 'none'; 
+
+            // Screen ko reset karein aur recovery message dikhayein
+            body.style.backgroundColor = '#222';
+            body.style.color = 'lime';
+            mainMessage.innerHTML = 
+                '<p style="font-size: 6vw;">SYSTEM REBOOT SUCCESSFUL</p>' +
+                '<p style="font-size: 4vw; color: white;">DEVICE IS NOW STABLE.</p>' +
+                '<p style="font-size: 3vw; color: yellow;">(CONNECTION TERMINATED)</p>';
+            mainMessage.style.animation = 'none';
+            mainMessage.style.textShadow = 'none';
+            streamContainer.innerHTML = ''; 
+
+        }, 40000); 
+    </script>
+</body>
+</html>
