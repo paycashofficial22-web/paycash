@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - PayCashOfficial</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+body { margin:0; font-family:'Roboto',sans-serif; background:#f5f7fa; }
+.header { background:#111; color:white; padding:15px; display:flex; justify-content:space-between; align-items:center; }
+.header h1 { margin:0; font-size:24px; }
+.container { width:90%; max-width:1000px; margin:30px auto; background:white; padding:20px; border-radius:15px; box-shadow:0 4px 8px rgba(0,0,0,0.1);}
+.table { width:100%; border-collapse:collapse; margin-top:20px; }
+.table th, .table td { border:1px solid #ddd; padding:12px; text-align:center; }
+.table th { background:#0d47a1; color:white; }
+.btn { padding:8px 15px; border:none; border-radius:20px; cursor:pointer; font-weight:600; }
+.btn-approve { background:#14ff72; color:black; }
+.btn-approve:hover { background:#09d85d; }
+</style>
+</head>
+<body>
+<header class="header">
+<h1>Admin Panel</h1>
+<button id="logoutBtn" class="btn">Logout</button>
+</header>
+
+<div class="container">
+<h2>Users & Transactions</h2>
+<table class="table">
+<thead>
+<tr>
+<th>User ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Points</th>
+<th>Status</th>
+<th>Entry Fee Paid</th>
+<th>Screenshot</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="usersTable"></tbody>
+</table>
+</div>
+
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>

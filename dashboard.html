@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAYCASH - User Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script defer src="app.js"></script>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div class="user-info">
+            <h2 id="user-welcome" style="color: var(--red);">خوش آمدید، یوزر</h2>
+            <p>ای میل: <span id="user-email-display"></span> | UID: <span id="user-uid-display"></span></p>
+            <button class="btn-primary" style="width: auto; padding: 8px 15px;" onclick="auth.signOut()">لاگ آؤٹ</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>کل پوائنٹس</h3>
+                <p id="user-points">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>اکاؤنٹ سٹیٹس</h3>
+                <p id="account-status">Inactive</p>
+            </div>
+            <div class="stat-card">
+                <h3>آخری کلک</h3>
+                <p id="last-click-time">N/A</p>
+            </div>
+            <div class="stat-card">
+                <h3>اگلا کلک (وقت)</h3>
+                <p id="time-to-next-click">24:00:00</p>
+            </div>
+        </div>
+
+        <div class="earning-section">
+            <h2>آج کی کمائی</h2>
+            <button id="daily-click-btn" class="btn-primary" onclick="dailyClick()">
+                🔴 کلک کریں (100 Points)
+            </button>
+            <p id="earning-message" style="text-align: center; color: var(--red); margin-top: 15px;">
+                اپنا اکاؤنٹ فعال (Activate) کرائیں۔
+            </p>
+        </div>
+
+        <div class="leaderboard-section">
+            <h2 style="color: var(--green);">🌟 ٹاپ کمانے والے (Top Earners)</h2>
+            <ul id="leaderboard-list" class="leaderboard-list">
+                <li style="text-align: center;">لیڈر بورڈ لوڈ ہو رہا ہے...</li>
+            </ul>
+        </div>
+
+        <div class="payment-verification" id="payment-section">
+            <h2 style="color: var(--red);">💸 اکاؤنٹ فعال کریں (100 روپے)</h2>
+            <div class="account-details">
+                <p><strong>EasyPaisa Account:</strong> 03XXXXXXXXX</p>
+                <p><strong>Account Name:</strong> ADMIN NAME</p>
+            </div>
+
+            <p style="color: var(--grey-light);">100 روپے بھیجیں اور نیچے سکرین شاٹ اپ لوڈ کریں۔</p>
+            
+            <div class="file-upload-wrapper">
+                <input type="file" id="screenshot-file" accept="image/*" style="width: 100%;">
+            </div>
+
+            <button class="btn-primary" id="submit-payment" onclick="handleScreenshotUpload()">
+                سکرین شاٹ بھیجیں (Send Screenshot)
+            </button>
+            <p id="payment-status-message" style="margin-top: 15px; color: yellow;"></p>
+        </div>
+    </div>
+</body>
+</html>
