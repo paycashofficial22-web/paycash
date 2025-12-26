@@ -1,86 +1,33 @@
-
 <!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PAYCASH - Home</title>
-    <link rel="stylesheet" href="style.css">
+    <title>PayCash - لاگ ان اور رجسٹریشن</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .auth-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 350px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .toggle-link { color: #007bff; cursor: pointer; margin-top: 15px; display: block; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <h2 id="auth-title">لاگ ان کریں</h2>
+        <input type="email" id="email" placeholder="ای میل">
+        <input type="password" id="password" placeholder="پاس ورڈ">
+        
+        <div id="signup-fields" style="display: none;">
+            <input type="text" id="referral-code-input" placeholder="ریفرل کوڈ (اگر ہے تو)">
+        </div>
+        <button id="auth-btn" onclick="handleAuth()">داخل ہوں</button>
+        <span class="toggle-link" id="toggle-txt" onclick="toggleAuth()">نیا اکاؤنٹ بنائیں؟ سائن اپ کریں</span>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    <script defer src="app.js"></script>
-</head>
-<body>
-    <div class="header-nav">
-        <h2 style="color: var(--red);">💰 PAYCASH</h2>
-        <div class="nav-links">
-            <a href="javascript:void(0)" onclick="showForm('login')">لاگ اِن</a>
-            <a href="javascript:void(0)" onclick="showForm('signup')" class="btn-primary-small">سائن اَپ کریں</a>
-        </div>
-    </div>
-
-    <div class="container" id="login-form-card" style="position: absolute; z-index: 200;">
-        <div id="login-form">
-            <h2>لاگ اِن (Log In)</h2>
-            <input type="email" id="login-email" placeholder="ای میل (Email)" required>
-            <input type="password" id="login-password" placeholder="پاسورڈ (Password)" required>
-            <button class="btn-primary" onclick="handleLogin()">لاگ اِن کریں</button>
-            <p id="login-error-msg" style="color: var(--red); text-align: center; margin-top: 10px;"></p>
-            <a class="toggle-link" onclick="showForm('signup')">اکاؤنٹ نہیں ہے؟ <span>سائن اَپ کریں</span></a>
-        </div>
-        
-        <div id="signup-form" style="display: none;">
-            <h2>سائن اَپ (Sign Up)</h2>
-            <input type="text" id="signup-name" placeholder="پورا نام (Full Name)" required>
-            <input type="email" id="signup-email" placeholder="ای میل (Email)" required>
-            <input type="password" id="signup-password" placeholder="پاسورڈ (Password)" required>
-            <button class="btn-primary" onclick="handleSignup()">اکاؤنٹ بنائیں</button>
-            <p id="signup-error-msg" style="color: var(--red); text-align: center; margin-top: 10px;"></p>
-            <a class="toggle-link" onclick="showForm('login')">پہلے سے اکاؤنٹ ہے؟ <span>لاگ اِن کریں</span></a>
-        </div>
-    </div>
-
-
-    <div class="main-homepage-content hero-section">
-        <h1>PAYCASH: روزانہ کمائی کا آسان طریقہ</h1>
-        <p style="font-size: 18px; color: var(--grey-light);">ہمارا پلیٹ فارم آپ کو روزانہ ایک کلک پر پوائنٹس کمانے کا موقع فراہم کرتا ہے۔</p>
-        <button class="btn-primary" style="max-width: 300px; margin-top: 20px;" onclick="showForm('signup')">آج ہی سائن اَپ کریں!</button>
-        
-        <h2 style="color: var(--red); margin-top: 80px;">اکثر پوچھے جانے والے سوالات (FAQ)</h2>
-        <div style="text-align: left; margin-top: 30px;">
-            <details style="background-color: #34495e; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
-                <summary style="font-weight: bold; cursor: pointer;">1. میں کیسے کما سکتا ہوں؟</summary>
-                <p style="padding-top: 10px; color: var(--grey-light);">اکاؤنٹ فعال کرانے کے بعد، آپ روزانہ ایک بٹن پر کلک کر کے 100 پوائنٹس حاصل کر سکتے ہیں۔</p>
-            </details>
-            <details style="background-color: #34495e; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
-                <summary style="font-weight: bold; cursor: pointer;">2. اکاؤنٹ فعال کیوں کرانا ہے؟</summary>
-                <p style="padding-top: 10px; color: var(--grey-light);">یہ پلیٹ فارم کی پائیداری (Sustainability) اور سیکیورٹی کے لیے ضروری ہے۔ ایک چھوٹی سی فیس آپ کے اکاؤنٹ کو مکمل ارننگ کے لیے فعال کرتی ہے۔</p>
-            </details>
-            <details style="background-color: #34495e; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
-                <summary style="font-weight: bold; cursor: pointer;">3. میں اپنے پوائنٹس کیسے نکال سکتا ہوں؟</summary>
-                <p style="padding-top: 10px; color: var(--grey-light);">جب آپ ودڈرا کی حد تک پہنچ جائیں گے، تو آپ ڈیش بورڈ میں ودڈرا فارم استعمال کر سکتے ہیں۔</p>
-            </details>
-        </div>
-    </div>
-    
-    <script>
-        function showForm(mode) {
-            const formCard = document.getElementById('login-form-card');
-            const loginForm = document.getElementById('login-form');
-            const signupForm = document.getElementById('signup-form');
-
-            formCard.style.display = 'block';
-
-            if (mode === 'signup') {
-                loginForm.style.display = 'none';
-                signupForm.style.display = 'block';
-            } else {
-                signupForm.style.display = 'none';
-                loginForm.style.display = 'block';
-            }
-        }
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>

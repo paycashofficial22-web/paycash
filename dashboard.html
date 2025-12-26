@@ -3,76 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PAYCASH - User Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <title>PayCash - ڈیش بورڈ</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f7f6; margin: 0; padding: 20px; text-align: center; }
+        .dashboard-container { max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .points-box { background: #28a745; color: white; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .points-box h1 { margin: 0; font-size: 40px; }
+        .btn-click { background: #ffc107; color: #333; padding: 15px 30px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 18px; width: 100%; }
+        .referral-section { background: #e9ecef; padding: 15px; border-radius: 10px; margin: 15px 0; }
+        .activation-card { background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px solid #ffeeba; }
+        .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; float: left; }
+        input[type="text"] { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <button class="logout-btn" onclick="logout()">لاگ آؤٹ</button>
+        <h2>خوش آمدید!</h2>
+        <p id="user-email">لوڈ ہو رہا ہے...</p>
+
+        <div class="points-box">
+            <p>آپ کے کل پوائنٹس</p>
+            <h1 id="user-points">0</h1>
+        </div>
+
+        <button class="btn-click" id="daily-btn" onclick="addDailyPoints()">🎁 ڈیلی بونس حاصل کریں (300)</button>
+
+        <div class="referral-section">
+            <p>آپ کا ریفرل کوڈ (دوستوں کو بھیجیں):</p>
+            <strong id="my-referral-code" style="color: #007bff; font-size: 18px;">---</strong>
+            <p style="font-size: 12px;">ہر کامیاب ریفرل پر 500 پوائنٹس ملیں گے!</p>
+        </div>
+
+        <div id="activation-area">
+            </div>
+    </div>
+    <div id="mystery-box-section" style="margin-top: 20px; border: 2px dashed #ffc107; padding: 15px; border-radius: 10px; background: #fff9e6;">
+    <h3 style="color: #856404;">🎁 Mystery Box (Lucky Draw)</h3>
+    <p>Har baar open karne ke liye <b>20 PKR</b> EasyPaisa karein aur T-ID likhen!</p>
+    <p style="margin: 0; font-weight: bold; color: #d35400;">EasyPaisa Number: 03xx-xxxxxxx</p>
+    <input type="text" id="mystery-tid" placeholder="Enter Transaction ID (T-ID)" style="width: 80%; padding: 8px;">
+    <button onclick="payForBox()" style="background: #ffc107; border: none; padding: 10px; margin-top: 5px; cursor: pointer; font-weight: bold;">Open Box (Rs. 20)</button>
+    <div id="box-result" style="margin-top: 10px; font-weight: bold; color: green;"></div>
+</div>
+<div id="withdraw-area" style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px;">
+    <h3>💰 پیسے نکلوائیں (Withdraw)</h3>
+    <p style="font-size: 13px; color: #555;">کم از کم 5000 پوائنٹس ہونا ضروری ہیں</p>
+    <input type="number" id="withdraw-amount" placeholder="پوائنٹس کی تعداد">
+    <input type="text" id="account-number" placeholder="نمبر (EasyPaisa/JazzCash)">
+    <select id="payment-method" style="width: 80%; padding: 10px; margin: 5px 0;">
+        <option value="EasyPaisa">EasyPaisa</option>
+        <option value="JazzCash">JazzCash</option>
+    </select>
+    <button onclick="requestWithdraw()" style="background: #007bff; color: white; border: none; padding: 12px; margin-top: 10px; border-radius: 5px; cursor: pointer; width: 80%;">درخواست بھیجیں</button>
+</div>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    <script defer src="app.js"></script>
-</head>
-<body>
-    <div class="dashboard-layout">
-        <div class="user-info">
-            <h2 id="user-welcome" style="color: var(--red);">خوش آمدید، یوزر</h2>
-            <p>ای میل: <span id="user-email-display"></span> | UID: <span id="user-uid-display"></span></p>
-            <button class="btn-primary" style="width: auto; padding: 8px 15px;" onclick="auth.signOut()">لاگ آؤٹ</button>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>کل پوائنٹس</h3>
-                <p id="user-points">0</p>
-            </div>
-            <div class="stat-card">
-                <h3>اکاؤنٹ سٹیٹس</h3>
-                <p id="account-status">Inactive</p>
-            </div>
-            <div class="stat-card">
-                <h3>آخری کلک</h3>
-                <p id="last-click-time">N/A</p>
-            </div>
-            <div class="stat-card">
-                <h3>اگلا کلک (وقت)</h3>
-                <p id="time-to-next-click">24:00:00</p>
-            </div>
-        </div>
-
-        <div class="earning-section">
-            <h2>آج کی کمائی</h2>
-            <button id="daily-click-btn" class="btn-primary" onclick="dailyClick()">
-                🔴 کلک کریں (100 Points)
-            </button>
-            <p id="earning-message" style="text-align: center; color: var(--red); margin-top: 15px;">
-                اپنا اکاؤنٹ فعال (Activate) کرائیں۔
-            </p>
-        </div>
-
-        <div class="leaderboard-section">
-            <h2 style="color: var(--green);">🌟 ٹاپ کمانے والے (Top Earners)</h2>
-            <ul id="leaderboard-list" class="leaderboard-list">
-                <li style="text-align: center;">لیڈر بورڈ لوڈ ہو رہا ہے...</li>
-            </ul>
-        </div>
-
-        <div class="payment-verification" id="payment-section">
-            <h2 style="color: var(--red);">💸 اکاؤنٹ فعال کریں (100 روپے)</h2>
-            <div class="account-details">
-                <p><strong>EasyPaisa Account:</strong> 03XXXXXXXXX</p>
-                <p><strong>Account Name:</strong> ADMIN NAME</p>
-            </div>
-
-            <p style="color: var(--grey-light);">100 روپے بھیجیں اور نیچے سکرین شاٹ اپ لوڈ کریں۔</p>
-            
-            <div class="file-upload-wrapper">
-                <input type="file" id="screenshot-file" accept="image/*" style="width: 100%;">
-            </div>
-
-            <button class="btn-primary" id="submit-payment" onclick="handleScreenshotUpload()">
-                سکرین شاٹ بھیجیں (Send Screenshot)
-            </button>
-            <p id="payment-status-message" style="margin-top: 15px; color: yellow;"></p>
-        </div>
-    </div>
+    <script src="app.js"></script>
 </body>
 </html>
