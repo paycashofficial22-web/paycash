@@ -225,11 +225,27 @@ async function claimDailyBonus() {
         const doc = await userRef.get();
         const userData = doc.data();
         
-        // ✅ آپ کے فائر بیس کے مطابق 'is_active' چیک کر رہا ہے
-        if (userData.is_active !== true) {
-            alert("Pehle apna account 100 PKR de kar active karwayein!");
-            return; 
-        }
+       // ✅ چیک کریں کہ اکاؤنٹ ایکٹیو ہے اور ریفرل پوائنٹس ابھی تک نہیں ملے
+       // --- ریفرل پوائنٹس کا فائنل کوڈ ---
+if (userData.is_active === true) {
+    // چیک کریں کہ کیا ریفرل کوڈ موجود ہے اور کیا اسے پہلے انعام نہیں ملا
+    if (userData.referredBy && userData.referralProcessed !== true) {
+        
+        // عظمہ (ریفرر) کو پوائنٹس دینے والا فنکشن چلائیں
+        await rewardReferrer(userData.referredBy);
+        
+        // اب ثوبیہ کے ڈیٹا کو اپ ڈیٹ کریں تاکہ اسے دوبارہ پوائنٹس نہ ملیں
+        await userRef.update({ 
+            referralAwarded: true,
+            referralProcessed: true 
+        });
+        
+        console.log("Success: Points awarded to referrer!");
+    }
+} else {
+    alert("Pehle account active karwayein!");
+    return;
+}
 
         const lastClaim = userData.lastDailyBonus || 0;
         const now = Date.now();
@@ -300,3 +316,33 @@ auth.onAuthStateChanged(async (user) => {
         }
     }
 });
+// ریفرل پوائنٹس دینے والا خودکار سسٹم
+async function rewardReferrer(referredByCode) {
+    if (!referredByCode) return;
+    try {
+        const usersRef = db.collection('users');
+        const cleanCode = referredByCode.trim();
+
+        // 1. عظمہ کو اس کی آئی ڈی (UID) سے ڈھونڈیں
+        const referrerDocRef = usersRef.doc(cleanCode);
+        const doc = await referrerDocRef.get();
+
+        if (doc.exists) {
+            // 2. اگر عظمہ مل جائے تو اسے 800 پوائنٹس دیں
+            await referrerDocRef.update({
+                points: firebase.firestore.FieldValue.increment(800)
+            });
+            console.log("Points added to Uzma!");
+        } else {
+            // 3. اگر آئی ڈی سے نہ ملے تو پرانے ریفرل کوڈ سے ڈھونڈیں
+            const snapshot = await usersRef.where('referralCode', '==', cleanCode).get();
+            if (!snapshot.empty) {
+                await snapshot.docs[0].ref.update({
+                    points: firebase.firestore.FieldValue.increment(800)
+                });
+            }
+        }
+    } catch (error) {
+        console.error("Referral Error: ", error);
+    }
+}
