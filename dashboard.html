@@ -5,35 +5,203 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PayCash - ڈیش بورڈ</title>
     <style>
-        body { font-family: sans-serif; background: #f4f7f6; margin: 0; padding: 20px; text-align: center; }
-        .dashboard-container { max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .points-box { background: #28a745; color: white; padding: 20px; border-radius: 10px; margin: 20px 0; }
-        .points-box h1 { margin: 0; font-size: 40px; }
-        .btn-click { background: #ffc107; color: #333; padding: 15px 30px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 18px; width: 100%; }
-        .referral-section { background: #e9ecef; padding: 15px; border-radius: 10px; margin: 15px 0; }
-        .activation-card { background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px solid #ffeeba; }
-        .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; float: left; }
-        input[type="text"] { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+    * {
+        font-family: 'Poppins', sans-serif !important;
+    }
+
+    body {
+        background: #f4f7f6 !important; /* ہلکا گرے رنگ */
+        margin: 0 !important;
+        padding: 10px !important;
+    }
+
+    /* پوائنٹس والے باکس کا ڈیزائن */
+    .dashboard-container, #points-card, [style*="background-color: green"] {
+        background: linear-gradient(135deg, #00b09b, #96c93d) !important;
+        border-radius: 20px !important;
+        padding: 30px !important;
+        color: white !important;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        border: none !important;
+        text-align: center !important;
+    }
+
+    /* تمام بٹنوں کا ڈیزائن */
+    button, .btn-click, #daily-bonus-btn {
+        background: #ffc107 !important;
+        color: #2c3e50 !important;
+        border-radius: 12px !important;
+        padding: 15px !important;
+        font-weight: bold !important;
+        border: none !important;
+        width: 100% !important;
+        margin-top: 10px !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+        cursor: pointer !important;
+    }
+
+    /* ان پٹ باکس */
+    input {
+        width: 100% !important;
+        padding: 12px !important;
+        border-radius: 10px !important;
+        border: 1px solid #ddd !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* کارڈز (سیکشنز) */
+    .section-box, #mystery-box-section, #withdraw-area {
+        background: white !important;
+        border-radius: 15px !important;
+        padding: 20px !important;
+        margin-top: 20px !important;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+        border: 1px solid #eee !important;
+    }
+    /* لاگ آؤٹ بٹن کا نیا اسٹائل */
+.logout-btn-small {
+    position: absolute !important;
+    top: 15px !important;
+    right: 15px !important;
+    width: auto !important; /* بڑا سائز ختم */
+    padding: 8px 15px !important; /* چھوٹا ڈبہ */
+    background: #e74c3c !important; /* سرخ رنگ */
+    color: white !important;
+    font-size: 12px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+    z-index: 1000;
+}
+
+/* موبائل پر بھی کونے میں رہے */
+@media screen and (max-width: 600px) {
+    .logout-btn-small {
+        top: 10px !important;
+        right: 10px !important;
+        padding: 5px 12px !important;
+    }
+}
+/* گول پوائنٹس باکس کا پروفیشنل ڈیزائن */
+.points-circle-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.points-circle {
+    width: 170px; /* دائرے کا سائز */
+    height: 170px;
+    background: linear-gradient(135deg, #1dcc70 0%, #13a35a 100%) !important;
+    border-radius: 50% !important; /* مکمل گول */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(29, 204, 112, 0.3) !important;
+    border: 5px solid #ffffff !important;
+    color: white !important;
+}
+
+.points-label {
+    font-size: 12px !important;
+    opacity: 0.9;
+    margin-bottom: 5px;
+}
+
+.points-number {
+    font-size: 35px !important;
+    margin: 0 !important;
+    font-weight: bold !important;
+}
+/* بونس سیکشن کو سینٹر کرنے کے لیے */
+.bonus-section-new {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* سینٹر کرنے کے لیے */
+    justify-content: center;
+    margin: 15px 0;
+    width: 100%;
+}
+
+/* ٹائمر کی لکھائی کا اسٹائل */
+.timer-text {
+    font-size: 13px !important;
+    font-weight: bold;
+    color: #d35400 !important;
+    margin-bottom: 8px;
+}
+
+/* چھوٹے بٹن کا اسٹائل */
+.small-bonus-btn {
+    width: auto !important; /* بٹن کی پوری چوڑائی ختم */
+    min-width: 200px !important; /* مناسب چوڑائی */
+    padding: 10px 20px !important;
+    background: #ffc107 !important;
+    color: #000 !important;
+    border-radius: 25px !important; /* گول کنارے */
+    font-size: 14px !important;
+    font-weight: bold !important;
+    border: none !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.small-bonus-btn:active {
+    transform: scale(0.95); /* کلک کرنے پر دبنے کا اثر */
+}
+</style>
     </style>
 </head>
 <body>
     <div class="dashboard-container">
-        <button class="logout-btn" onclick="logout()">لاگ آؤٹ</button>
+       <button onclick="logout()" class="logout-btn-small">لاگ آؤٹ</button>
         <h2>خوش آمدید!</h2>
         <p id="user-email">لوڈ ہو رہا ہے...</p>
 
-        <div class="points-box">
-            <p>آپ کے کل پوائنٹس</p>
-            <h1 id="user-points">0</h1>
-        </div>
+        <div class="points-circle-container">
+    <div class="points-circle">
+        <span class="points-label">آپ کے کل پوائنٹس</span>
+        <h1 id="user-points" class="points-number">0</h1>
+    </div>
+</div>
 
-        <button class="btn-click" id="daily-btn" onclick="addDailyPoints()">🎁 ڈیلی بونس حاصل کریں (300)</button>
-
+   <div class="bonus-section-new" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 15px 0;">
+    <div id="bonus-timer" style="font-size: 14px; font-weight: bold; color: #ffeb3b; margin-bottom: 8px;">لوڈنگ...</div>
+    <button id="daily-bonus-btn" onclick="claimDailyBonus()" style="width: 180px !important; padding: 10px; background: #ffc107; color: black; border-radius: 20px; border: none; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer;">
+        🎁 ڈیلی بونس (300)
+    </button>
+</div>
         <div class="referral-section">
             <p>آپ کا ریفرل کوڈ (دوستوں کو بھیجیں):</p>
             <strong id="my-referral-code" style="color: #007bff; font-size: 18px;">---</strong>
             <p style="font-size: 12px;">ہر کامیاب ریفرل پر 500 پوائنٹس ملیں گے!</p>
         </div>
+        <div style="background: #fff9c4; border: 2px solid #fbc02d; border-radius: 15px; padding: 10px; margin: 15px auto; max-width: 90%; color: #333; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <h3 style="margin: 5px 0; font-size: 16px; color: #000;">🏆 انعامی اہداف (Target List)</h3>
+    
+    <table style="width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 13px; color: #000;">
+        <tr style="border-bottom: 2px solid #fbc02d; font-weight: bold; background: #fff176;">
+            <th style="padding: 8px;">آخری تاریخ</th>
+            <th style="padding: 8px;">پوائنٹس</th>
+            <th style="padding: 8px;">پیمنٹ</th>
+        </tr>
+        <tr style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 8px;">10 جنوری</td>
+            <td style="padding: 8px;">60,000</td>
+            <td style="padding: 8px;"><span style="background:#2ecc71; color:white; padding:2px 5px; border-radius:4px;">بونس</span></td>
+        </tr>
+        <tr>
+            <td style="padding: 8px;">25 جنوری</td>
+            <td style="padding: 8px;">120,000</td>
+            <td style="padding: 8px;"><span style="background:#3498db; color:white; padding:2px 5px; border-radius:4px;">نارمل</span></td>
+        </tr>
+    </table>
+    
+    <p style="font-size: 11px; color: #e74c3c; margin-top: 8px; font-weight: bold;">
+        * نوٹ: ٹارگٹ سے پہلے ود ڈرا نہیں ہو سکتا۔
+    </p>
+</div>
 
         <div id="activation-area">
             </div>

@@ -72,6 +72,13 @@ auth.onAuthStateChanged(user => {
         document.getElementById('user-email').innerText = user.email;
         document.getElementById('my-referral-code').innerText = user.uid;
         loadData(user.uid);
+        // لائن 74 کے نیچے یہ پیسٹ کریں
+db.collection('users').doc(user.uid).onSnapshot(doc => {
+    if (doc.exists) {
+        const lastClaim = doc.data().lastDailyBonus || 0;
+        updateTimerDisplay(lastClaim); // ٹائمر کو اپ ڈیٹ کریں
+    }
+});
     }
 });
 
@@ -182,3 +189,114 @@ function requestWithdraw() {
         document.getElementById('mystery-tid').value = "";
     });
 }
+function updateTimerDisplay(lastClaim) {
+    const timerElement = document.getElementById('bonus-timer');
+    const btn = document.getElementById('daily-bonus-btn');
+    
+    const interval = setInterval(() => {
+        const now = Date.now();
+        const twentyFourHours = 24 * 60 * 60 * 1000;
+        const timeLeft = twentyFourHours - (now - lastClaim);
+
+        if (timeLeft <= 0) {
+            clearInterval(interval);
+            timerElement.innerText = "بونس دستیاب ہے! ✅";
+            btn.disabled = false;
+            btn.style.opacity = "1";
+        } else {
+            btn.disabled = true;
+            btn.style.opacity = "0.6";
+            const h = Math.floor(timeLeft / 3600000);
+            const m = Math.floor((timeLeft % 3600000) / 60000);
+            const s = Math.floor((timeLeft % 60000) / 1000);
+            timerElement.innerText = `اگلا بونس: ${h}h ${m}m ${s}s بعد`;
+        }
+    }, 1000);
+}
+// --- Naya Daily Bonus Function (300 Points + Time Save) ---
+// --- Updated Daily Bonus Function (Pehli baar free points ke liye) ---
+async function claimDailyBonus() {
+    const user = auth.currentUser;
+    if (!user) return alert("Pehle login karein!");
+
+    const userRef = db.collection('users').doc(user.uid);
+
+    try {
+        const doc = await userRef.get();
+        const userData = doc.data();
+        
+        // ✅ آپ کے فائر بیس کے مطابق 'is_active' چیک کر رہا ہے
+        if (userData.is_active !== true) {
+            alert("Pehle apna account 100 PKR de kar active karwayein!");
+            return; 
+        }
+
+        const lastClaim = userData.lastDailyBonus || 0;
+        const now = Date.now();
+        const twentyFourHours = 24 * 60 * 60 * 1000;
+
+        if (lastClaim === 0 || (now - lastClaim >= twentyFourHours)) {
+            await userRef.update({
+                points: firebase.firestore.FieldValue.increment(300),
+                lastDailyBonus: now
+            });
+            alert("Mubarak ho! 300 points mil gaye.");
+            updateTimerDisplay(now); 
+        } else {
+            alert("Aap aaj ka bonus le chuke hain.");
+        }
+    } catch (error) {
+        console.error("Error: ", error);
+        alert("Kuch masla hua hai.");
+    }
+}
+// --- Logout Function ---
+function logout() {
+    auth.signOut().then(() => {
+        // Logout hone ke baad user ko login page par bhej dein
+        window.location.href = "index.html"; 
+    }).catch((error) => {
+        alert("Logout fail: " + error.message);
+    });
+}
+// ریفرل پوائنٹس چیک کرنے کا خودکار نظام
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        const userRef = db.collection('users').doc(user.uid);
+        const doc = await userRef.get();
+        const userData = doc.data();
+
+        // چیک کریں کہ کیا یہ نیا یوزر ہے اور اس نے ریفرل کوڈ استعمال کرنا ہے
+        if (userData && !userData.referralProcessed) {
+            let refCode = prompt("اگر آپ کے پاس ریفرل کوڈ ہے تو یہاں لکھیں، ورنہ Skip کر دیں:");
+            
+            if (refCode && refCode.trim() !== "") {
+                try {
+                    const oldUserQuery = await db.collection('users').where('referralCode', '==', refCode).get();
+
+                    if (!oldUserQuery.empty) {
+                        const oldUserDoc = oldUserQuery.docs[0];
+                        const oldUserRef = db.collection('users').doc(oldUserDoc.id);
+
+                        // پرانے یوزر کو 800 پوائنٹس دینا
+                        await oldUserRef.update({
+                            points: firebase.firestore.FieldValue.increment(800)
+                        });
+
+                        // نئے یوزر کو مارک کرنا کہ اس کا ریفرل ہو گیا ہے
+                        await userRef.update({ referralProcessed: true });
+
+                        alert("Your first team member added! Congratulations 🎉");
+                    } else {
+                        alert("غلط ریفرل کوڈ!");
+                    }
+                } catch (e) {
+                    console.error("Error:", e);
+                }
+            } else {
+                // اگر کوڈ نہیں ڈالا تو دوبارہ نہ پوچھے
+                await userRef.update({ referralProcessed: true });
+            }
+        }
+    }
+});
