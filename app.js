@@ -346,3 +346,52 @@ async function rewardReferrer(referredByCode) {
         console.error("Referral Error: ", error);
     }
 }
+// لائیو ود ڈرا اپ ڈیٹ لسٹ
+const fakeWithdrawals = [
+    "Ikram withdraw 5500rs",
+    "Sobia withdraw 1200rs",
+    "Ali withdraw 3000rs",
+    "Uzma withdraw 8000rs",
+    "Zohaib withdraw 4500rs",
+    "Maria withdraw 2500rs",
+    "Hamza withdraw 6000rs"
+];
+
+function startLiveUpdates() {
+    const textElement = document.getElementById('live-update-text');
+    let index = 0;
+
+    // ہر 3 سیکنڈ بعد نام اور رقم بدلے گی
+    setInterval(() => {
+        textElement.style.opacity = 0; // غائب ہونے کا اثر
+        
+        setTimeout(() => {
+            textElement.innerText = "🔥 " + fakeWithdrawals[index];
+            textElement.style.opacity = 1; // ظاہر ہونے کا اثر
+            index = (index + 1) % fakeWithdrawals.length;
+        }, 500);
+        
+    }, 3000);
+}
+
+
+// ڈیش بورڈ لوڈ ہوتے ہی شروع کریں
+window.addEventListener('load', startLiveUpdates);
+
+function copyReferralLink() {
+    const user = auth.currentUser;
+    if (user) {
+        // آپ کی ویب سائٹ کا یو آر ایل (URL) خود بخود اٹھائے گا
+        const siteUrl = window.location.origin + window.location.pathname.replace('dashboard.html', 'index.html');
+        const referralLink = `${siteUrl}?ref=${user.uid}`;
+
+        // کلپ بورڈ میں کاپی کرنا
+        navigator.clipboard.writeText(referralLink).then(() => {
+            alert("لنک کاپی ہو گیا! اب اسے واٹس ایپ پر شئیر کریں:\n" + referralLink);
+        }).catch(err => {
+            console.error('Copy failed', err);
+        });
+    } else {
+        alert("پہلے لاگ ان کریں!");
+    }
+}
