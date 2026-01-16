@@ -183,20 +183,33 @@
     <h3 style="color: #1a237e; font-size: 18px; margin-top: 0;">💰 اکاؤنٹ ایکٹیو کریں</h3>
     <p style="font-size: 13px; color: #555;">پیمنٹ مکمل کرنے کے لیے نیچے بٹن دبائیں</p>
 
-   <form action="https://www.cashmaal.com/Pay/" method="POST">
-    <input type="hidden" name="pay_ee" value="shanihassan268@gmail.com"> 
-    <input type="hidden" name="web_id" value="11109">
-    <input type="hidden" name="amount" value="100">
-    <input type="hidden" name="currency" value="PKR">
-    <input type="hidden" name="order_id" value="ActiveAccount">
-    
-    <input type="hidden" name="success_url" value="https://paycashofficial22-web.github.io/dashboard.html">
-    <input type="hidden" name="cancel_url" value="https://paycashofficial22-web.github.io/dashboard.html">
-    
-    <button type="submit" style="width: 100%; background: #fb8c00; color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer;">
-        ابھی ادائیگی کریں (Pay Now)
+   <div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; margin: 20px auto; max-width: 95%;">
+    <h3 style="color: #1a237e; margin-bottom: 15px;">ادائیگی کا طریقہ منتخب کریں</h3>
+
+    <form action="https://www.cashmaal.com/Pay/" method="POST" style="margin-bottom: 10px;">
+        <input type="hidden" name="pay_ee" value="shanihassan268@gmail.com"> 
+        <input type="hidden" name="web_id" value="11109">
+        <input type="hidden" name="amount" value="100">
+        <input type="hidden" name="success_url" value="https://paycashofficial22-web.github.io/dashboard.html">
+<input type="hidden" name="cancel_url" value="https://paycashofficial22-web.github.io/dashboard.html">
+        <input type="hidden" name="currency" value="PKR">
+        <button type="submit" style="width: 100%; background: #fb8c00; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+             آن لائن پیمنٹ کریں (EasyPaisa/JazzCash)
+        </button>
+    </form>
+
+    <div style="margin: 10px 0; color: #888;">— یا —</div>
+
+    <button onclick="document.getElementById('manualPay').style.display='block'" style="width: 100%; background: #f1f1f1; color: #333; border: 1px solid #ddd; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+        مینوئل پیمنٹ کی درخواست بھیجیں
     </button>
-</form>
+
+    <div id="manualPay" style="display:none; margin-top: 15px; background: #fffde7; padding: 10px; border-radius: 8px; border: 1px solid #ffe082;">
+        <p style="font-size: 13px;">اگر آن لائن بٹن کام نہ کرے، تو یہاں اپنی پیمنٹ TID لکھیں، ہم خود آپ سے رابطہ کریں گے۔</p>
+        <input type="text" id="userTID" placeholder="Transaction ID یہاں لکھیں" style="width: 90%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+        <button onclick="submitTID()" style="width: 90%; background: #1a237e; color: white; border: none; padding: 10px; border-radius: 5px; margin-top: 10px;">TID سبمٹ کریں</button>
+    </div>
+</div>
 </div>
            <div style="
     background: white; 
