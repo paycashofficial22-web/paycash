@@ -1,48 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel - PayCashOfficial</title>
-<link rel="stylesheet" href="css/style.css">
-<style>
-body { margin:0; font-family:'Roboto',sans-serif; background:#f5f7fa; }
-.header { background:#111; color:white; padding:15px; display:flex; justify-content:space-between; align-items:center; }
-.header h1 { margin:0; font-size:24px; }
-.container { width:90%; max-width:1000px; margin:30px auto; background:white; padding:20px; border-radius:15px; box-shadow:0 4px 8px rgba(0,0,0,0.1);}
-.table { width:100%; border-collapse:collapse; margin-top:20px; }
-.table th, .table td { border:1px solid #ddd; padding:12px; text-align:center; }
-.table th { background:#0d47a1; color:white; }
-.btn { padding:8px 15px; border:none; border-radius:20px; cursor:pointer; font-weight:600; }
-.btn-approve { background:#14ff72; color:black; }
-.btn-approve:hover { background:#09d85d; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - PayCashOfficial</title>
+    <style>
+        body { font-family: 'Roboto', sans-serif; margin:0; background: #f0f2f5; }
+        .header { background: #1a237e; color: white; padding: 15px; text-align: center; display: flex; justify-content: space-between; align-items: center; }
+        .container { padding: 20px; max-width: 1000px; margin: auto; }
+        .stats-grid { display: flex; gap: 15px; margin-bottom: 20px; }
+        .card { background: white; padding: 20px; border-radius: 10px; flex: 1; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+        .card h3 { margin: 0; color: #555; font-size: 14px; }
+        .card p { font-size: 24px; font-weight: bold; margin: 10px 0; color: #1a237e; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #1a237e; color: white; }
+        .btn-approve { background: #4caf50; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        #access-denied { color: red; text-align: center; margin-top: 50px; font-weight: bold; display: none; }
+    </style>
 </head>
 <body>
-<header class="header">
-<h1>Admin Panel</h1>
-<button id="logoutBtn" class="btn">Logout</button>
-</header>
+    <div id="admin-main" style="display: none;">
+        <div class="header">
+            <h2>Admin Dashboard</h2>
+            <button onclick="logout()" style="background:red; color:white; border:none; padding:8px; border-radius:5px;">Logout</button>
+        </div>
+        
+        <div class="container">
+            <div class="stats-grid">
+                <div class="card">
+                    <h3>Total Users</h3>
+                    <p id="total-users">0</p>
+                </div>
+                <div class="card">
+                    <h3>Pending Payments</h3>
+                    <p id="pending-payments">0</p>
+                </div>
+            </div>
 
-<div class="container">
-<h2>Users & Transactions</h2>
-<table class="table">
-<thead>
-<tr>
-<th>User ID</th>
-<th>Name</th>
-<th>Email</th>
-<th>Points</th>
-<th>Status</th>
-<th>Entry Fee Paid</th>
-<th>Screenshot</th>
-<th>Actions</th>
-</tr>
-</thead>
-<tbody id="usersTable"></tbody>
-</table>
-</div>
+            <div class="card" style="text-align: left;">
+                <h3>Recent Transactions (TIDs)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User Email</th>
+                            <th>TID</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tid-list">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-<script type="module" src="js/admin.js"></script>
+    <div id="access-denied">Access Denied! Sirf Admin hi ye page dekh sakta hai.</div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="admin-logic.js"></script>
 </body>
 </html>

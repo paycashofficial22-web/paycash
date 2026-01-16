@@ -395,3 +395,33 @@ function copyReferralLink() {
         alert("پہلے لاگ ان کریں!");
     }
 }
+async function submitTID() {
+    const tid = document.getElementById('userTID').value;
+    const amount = document.getElementById('payAmount').value;
+    const user = auth.currentUser;
+
+    if (!tid || !amount) {
+        alert("براہ کرم رقم اور TID دونوں لکھیں!");
+        return;
+    }
+
+    try {
+        // فائر بیس میں پیمنٹ کی درخواست جمع کرنا
+        await db.collection("payments").add({
+            userId: user.uid,
+            userEmail: user.email,
+            tid: tid,
+            amount: amount,
+            status: "pending",
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        alert("آپ کی TID موصول ہوگئی ہے! چیک کرنے کے بعد پوائنٹس ایڈ کر دیے جائیں گے۔");
+        // باکس خالی کرنا
+        document.getElementById('userTID').value = "";
+        document.getElementById('payAmount').value = "";
+    } catch (error) {
+        console.error("Error: ", error);
+        alert("کچھ غلط ہو گیا، دوبارہ کوشش کریں!");
+    }
+}
